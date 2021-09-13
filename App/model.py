@@ -62,7 +62,7 @@ def addAutor(catalog, autor):
 
 def addObras(catalog, obra):
     """
-    Adiciona un autor a la lista de autores
+    Adiciona una obra a la lista de autores
     """
     lt.addLast(catalog['obras'],obra)
 
