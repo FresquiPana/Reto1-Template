@@ -68,7 +68,7 @@ while True:
         loadData(catalog)
         print('Archivos cargados')
         print(catalog['autores'])
-        print(catalog['obras'])
+        
 
 
     elif int(inputs[0]) == 2:
