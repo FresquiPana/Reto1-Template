@@ -25,7 +25,13 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
+from DISClib.Algorithms.Sorting import quicksort as QSort
+from DISClib.Algorithms.Sorting import shellsort as ShSort
+from DISClib.Algorithms.Sorting import selectionsort as SSort
+from DISClib.Algorithms.Sorting import mergesort as MSort
+from DISClib.Algorithms.Sorting import insertionsort as ISort
 
+sortingAlgorigthms = [ISort.sort, MSort.sort, SSort.sort, ShSort.sort, QSort.quicksort]
 
 """
 La vista se encarga de la interacción con el usuario
@@ -41,6 +47,7 @@ def printMenu():
     print('3- Numero de obras')
     print('4- Ultimos tres elementos (artistas & obras)')
     print("5- req1")
+    print("6- req2")
 
 def initCatalog():
     """
@@ -56,17 +63,54 @@ def loadData(catalog):
 
 
 def req1(catalogo, annoInicial, annoFinal):
-    catalogo["autores"]["elements"].sort(key=lambda elem: (int)(elem["BeginDate"]), reverse = True)
+    instanceCatalogo = catalogo
+    instanceCatalogo["autores"]["elements"].sort(key=lambda elem: (int)(elem["BeginDate"]), reverse = True)
     resultado = []
-    for i in catalogo["autores"]["elements"]:
-        if (int)(i["BeginDate"])>annoFinal:
+    for i in instanceCatalogo["autores"]["elements"]:
+        if (int)(i["BeginDate"])>(int)(annoFinal):
             continue
-        if (int)(i["BeginDate"]) < annoInicial:
+        if (int)(i["BeginDate"]) < (int)(annoInicial):
             break
         print(i["BeginDate"])
         resultado.append(i)
     resultado.reverse()
     return resultado
+
+def req2(catalogo, annoInicial, annoFinal, sortFunction):
+    """
+    for i in range(lt.size(instanceCatalogo["obras"])):
+        if lt.getElement(instanceCatalogo["obras"], i) == '':
+            lt.deleteElement(instanceCatalogo["obras"], i)
+    """
+    instanceCatalogo = catalogo
+    months = [31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365]
+
+    def sortingFunc(anno1, anno2):
+        anno1use = anno1["DateAcquired"].split("-") if anno1["DateAcquired"].split("-")!=[''] else ["0" for _ in range(3)]
+        anno2use = anno2["DateAcquired"].split("-") if anno2["DateAcquired"].split("-")!=[''] else ["0" for _ in range(3)]
+        firstAnno = (int)(anno1use[0]) + ((months[(int)(anno1use[1])-1] + (int)(anno1use[2]))/365)
+        secondAnno = (int)(anno2use[0]) + ((months[(int)(anno2use[1])-1] + (int)(anno2use[2]))/365)
+        if((int)(firstAnno)>(int)(secondAnno)):
+            return 1
+        return 0
+    sortingAlgorigthms[(int)(sortFunction)](lst = instanceCatalogo["obras"], cmpfunction = sortingFunc)
+    annoInicialUse = annoInicial.split("-") if annoInicial.split("-")!=[''] else ["0" for _ in range(3)]
+    firstAnno = (int)(annoInicialUse[0]) + ((months[(int)(annoInicialUse[1])-1] + (int)(annoInicialUse[2]))/365)
+    annoFinalUse = annoFinal.split("-") if annoFinal.split("-")!=[''] else ["0" for _ in range(3)]
+    lastAnno = (int)(annoFinalUse[0]) + ((months[(int)(annoFinalUse[1])-1] + (int)(annoFinalUse[2]))/365)
+    resultado = []
+    for i in instanceCatalogo["obras"]["elements"]:
+        dateAcquiredUse = i["DateAcquired"].split("-") if i["DateAcquired"].split("-")!=[''] else ["0" for _ in range(3)]
+        dateNICE = (int)(dateAcquiredUse[0]) + ((months[(int)(dateAcquiredUse[1])-1] + (int)(dateAcquiredUse[2]))/365)
+        if (int)(dateNICE)>(int)(lastAnno):
+            continue
+        if (int)(dateNICE) < (int)(firstAnno):
+            break
+        resultado.append(i)
+    resultado.reverse()
+    for i in resultado:
+        print(i["DateAcquired"])
+    return
 
 catalog = None
 
@@ -81,7 +125,7 @@ while True:
         catalog = initCatalog()
         loadData(catalog)
         print('Archivos cargados')
-        print(catalog["autores"]["elements"][4], "\n\n\n", catalog["obras"]["elements"][0].keys())
+        print(catalog["autores"]["elements"][4], "\n\n\n", catalog["obras"]["elements"][0]["DateAcquired"])
         """
         catalog["autores"]["elements"].sort(key=lambda elem: (int)(elem["ConstituentID"]))
         catalog["obras"]["elements"].sort(key=lambda elem: (int)(elem["ObjectID"]))
@@ -105,15 +149,17 @@ while True:
     
 
     elif int(inputs[0]) == 5:
-        resultado = req1(catalog, 1920, 1985)
-        print(len(resultado))
-        print(resultado[0])
+        resultado = req1(catalog, "1920", "1985")
+        print(len(resultado)) #numero de artistas en el rango entregado
+        print(resultado[0]) #
         print(resultado[1])
         print(resultado[2])
         print(resultado[-1])
         print(resultado[-2])
         print(resultado[-3])
 
+    elif int(inputs[0]) == 6:
+        req2(catalog, "1920-02-20", "1985-02-20", "3")
 
     else:
         sys.exit(0)
