@@ -40,6 +40,7 @@ def printMenu():
     print("2- Numero de artistas")
     print('3- Numero de obras')
     print('4- Ultimos tres elementos (artistas & obras)')
+    print("5- req1")
 
 def initCatalog():
     """
@@ -54,6 +55,19 @@ def loadData(catalog):
     controller.loadData(catalog)
 
 
+def req1(catalogo, annoInicial, annoFinal):
+    catalogo["autores"]["elements"].sort(key=lambda elem: (int)(elem["BeginDate"]), reverse = True)
+    resultado = []
+    for i in catalogo["autores"]["elements"]:
+        if (int)(i["BeginDate"])>annoFinal:
+            continue
+        if (int)(i["BeginDate"]) < annoInicial:
+            break
+        print(i["BeginDate"])
+        resultado.append(i)
+    resultado.reverse()
+    return resultado
+
 catalog = None
 
 """
@@ -67,7 +81,16 @@ while True:
         catalog = initCatalog()
         loadData(catalog)
         print('Archivos cargados')
-        print(catalog['autores'])
+        print(catalog["autores"]["elements"][4], "\n\n\n", catalog["obras"]["elements"][0].keys())
+        """
+        catalog["autores"]["elements"].sort(key=lambda elem: (int)(elem["ConstituentID"]))
+        catalog["obras"]["elements"].sort(key=lambda elem: (int)(elem["ObjectID"]))
+        for i in catalog["autores"]["elements"]:
+            print(i["ConstituentID"])
+        print("\n\n")
+        for i in catalog["obras"]["elements"]:
+            print(i["ObjectID"])
+        """
         
 
 
@@ -80,6 +103,17 @@ while True:
         print("Cargando Obras...")
         print('Obras Cargadas: ' + str(lt.size(catalog['obras'])))
     
+
+    elif int(inputs[0]) == 5:
+        resultado = req1(catalog, 1920, 1985)
+        print(len(resultado))
+        print(resultado[0])
+        print(resultado[1])
+        print(resultado[2])
+        print(resultado[-1])
+        print(resultado[-2])
+        print(resultado[-3])
+
 
     else:
         sys.exit(0)
