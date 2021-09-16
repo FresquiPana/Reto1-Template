@@ -86,22 +86,22 @@ def req2(catalogo, annoInicial, annoFinal, sortFunction):
     months = [31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365]
 
     def sortingFunc(anno1, anno2):
-        anno1use = anno1["DateAcquired"].split("-") if anno1["DateAcquired"].split("-")!=[''] else ["0" for _ in range(3)]
+        anno1use = anno1["DateAcquired"].split("-") if anno1["DateAcquired"].split("-")!=[''] else ["0" for _ in range(3)] #[2020, 10, 02]
         anno2use = anno2["DateAcquired"].split("-") if anno2["DateAcquired"].split("-")!=[''] else ["0" for _ in range(3)]
-        firstAnno = (int)(anno1use[0]) + ((months[(int)(anno1use[1])-1] + (int)(anno1use[2]))/365)
+        firstAnno = (int)(anno1use[0]) + ((months[(int)(anno1use[1])-1] + (int)(anno1use[2]))/365) #2020.344 
         secondAnno = (int)(anno2use[0]) + ((months[(int)(anno2use[1])-1] + (int)(anno2use[2]))/365)
         if((int)(firstAnno)>(int)(secondAnno)):
             return 1
         return 0
-    sortingAlgorigthms[(int)(sortFunction)](lst = instanceCatalogo["obras"], cmpfunction = sortingFunc)
-    annoInicialUse = annoInicial.split("-") if annoInicial.split("-")!=[''] else ["0" for _ in range(3)]
-    firstAnno = (int)(annoInicialUse[0]) + ((months[(int)(annoInicialUse[1])-1] + (int)(annoInicialUse[2]))/365)
-    annoFinalUse = annoFinal.split("-") if annoFinal.split("-")!=[''] else ["0" for _ in range(3)]
-    lastAnno = (int)(annoFinalUse[0]) + ((months[(int)(annoFinalUse[1])-1] + (int)(annoFinalUse[2]))/365)
+    sortingAlgorigthms[(int)(sortFunction)](lst = instanceCatalogo["obras"], cmpfunction = sortingFunc) # ShSort.sort(lst = instanceCatalogo["obras"], cmpfunction = sortingFunc)
+    annoInicialUse = annoInicial.split("-") if annoInicial.split("-")!=[''] else ["0" for _ in range(3)] #[1920, 02, 20]
+    firstAnno = (int)(annoInicialUse[0]) + ((months[(int)(annoInicialUse[1])-1] + (int)(annoInicialUse[2]))/365)#1920.216
+    annoFinalUse = annoFinal.split("-") if annoFinal.split("-")!=[''] else ["0" for _ in range(3)] #[1985, 02, 20]
+    lastAnno = (int)(annoFinalUse[0]) + ((months[(int)(annoFinalUse[1])-1] + (int)(annoFinalUse[2]))/365)#1985.216
     resultado = []
     for i in instanceCatalogo["obras"]["elements"]:
-        dateAcquiredUse = i["DateAcquired"].split("-") if i["DateAcquired"].split("-")!=[''] else ["0" for _ in range(3)]
-        dateNICE = (int)(dateAcquiredUse[0]) + ((months[(int)(dateAcquiredUse[1])-1] + (int)(dateAcquiredUse[2]))/365)
+        dateAcquiredUse = i["DateAcquired"].split("-") if i["DateAcquired"].split("-")!=[''] else ["0" for _ in range(3)]#[1920, 02, 20]
+        dateNICE = (int)(dateAcquiredUse[0]) + ((months[(int)(dateAcquiredUse[1])-1] + (int)(dateAcquiredUse[2]))/365)#1920.216
         if (int)(dateNICE)>(int)(lastAnno):
             continue
         if (int)(dateNICE) < (int)(firstAnno):
@@ -110,7 +110,7 @@ def req2(catalogo, annoInicial, annoFinal, sortFunction):
     resultado.reverse()
     for i in resultado:
         print(i["DateAcquired"])
-    return
+    return resultado
 
 catalog = None
 
