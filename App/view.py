@@ -83,7 +83,7 @@ def req2(catalogo, annoInicial, annoFinal, sortFunction):
             lt.deleteElement(instanceCatalogo["obras"], i)
     """
     instanceCatalogo = catalogo
-    months = [31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365]
+    months = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
 
     def sortingFunc(anno1, anno2):
         anno1use = anno1["DateAcquired"].split("-") if anno1["DateAcquired"].split("-")!=[''] else ["0" for _ in range(3)] #[2020, 10, 02]
