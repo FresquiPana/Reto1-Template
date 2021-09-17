@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from prettytable import PrettyTable
 import config as cf
 import sys
 import controller
@@ -150,16 +151,23 @@ while True:
 
     elif int(inputs[0]) == 5:
         resultado = req1(catalog, "1920", "1985")
-        print(len(resultado)) #numero de artistas en el rango entregado
-        print(resultado[0]) #
-        print(resultado[1])
-        print(resultado[2])
-        print(resultado[-1])
-        print(resultado[-2])
-        print(resultado[-3])
-
+        x = PrettyTable()
+        x.field_names = resultado[0].keys()
+        xd = [0,1,2,-3,-2,-1]
+        for i in xd:
+            x.add_row(resultado[i].values())
+        print("\n\nNumero de artistas en el rango: \n", len(resultado)) #numero de artistas en el rango entregado
+        print(x)
+        
     elif int(inputs[0]) == 6:
-        req2(catalog, "1920-02-20", "1985-02-20", "3")
+        resultado = req2(catalog, "1920-02-20", "1985-02-20", "3")
+        x = PrettyTable()
+        x.field_names = resultado[0].keys()
+        xd = [0,1,2,-3,-2,-1]
+        for i in xd:
+            x.add_row(resultado[i].values())
+        print("\n\nNumero de artistas en el rango: \n", len(resultado)) #numero de artistas en el rango entregado
+        print(x)
 
     else:
         sys.exit(0)
