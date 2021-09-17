@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+import ast
 from prettytable import PrettyTable
 import config as cf
 import sys
@@ -61,7 +62,6 @@ def loadData(catalog):
     Carga los libros en la estructura de datos
     """
     controller.loadData(catalog)
-
 
 def req1(catalogo, annoInicial, annoFinal):
     instanceCatalogo = catalogo
@@ -160,14 +160,24 @@ while True:
         print(x)
         
     elif int(inputs[0]) == 6:
+        f= open(cf.data_dir + "/tableTry.txt","w+")
         resultado = req2(catalog, "1920-02-20", "1985-02-20", "3")
         x = PrettyTable()
-        x.field_names = resultado[0].keys()
+        print([list(resultado[0].values())[3]])
+        print(list(resultado[0].values())[:3] + list(resultado[0].values())[4:6] + [list(resultado[0].values())[3]] + list(resultado[0].values())[10:13]) #0(ObjectID),1(Title),2(ArtistsIDs),4(Medium),5(Dimensions),3(Date),10(DateAcquired),12(URL) [0,1,2,3,4,5,6,7,8,9,10,11,12]
+        x.field_names = [*resultado[0]][:3] + [*resultado[0]][4:6] + [[*resultado[0]][3]] + [*resultado[0]][10:13]
         xd = [0,1,2,-3,-2,-1]
         for i in xd:
-            x.add_row(resultado[i].values())
-        print("\n\nNumero de artistas en el rango: \n", len(resultado)) #numero de artistas en el rango entregado
-        print(x)
+            artistasArray = []
+            print([elem for elem in catalog["autores"]["elements"] if elem["ConstituentID"] == "429"])
+            for j in ast.literal_eval(list(resultado[i].values())[2]):
+                print(j)
+                print(next((elem for elem in catalog["autores"]["elements"] if elem["ConstituentID"] == str(j)))["DisplayName"])
+                artistasArray += [next((elem for elem in catalog["autores"]["elements"] if elem["ConstituentID"] == str(j)))["DisplayName"]]
+            x.add_row(list(resultado[i].values())[:2] + [[dab for dab in artistasArray]] + list(resultado[i].values())[4:6] + [list(resultado[i].values())[3]] + list(resultado[i].values())[10:13])
+        print("\n\nNumero de obras en el rango: \n", len(resultado)) #numero de obras en el rango entregado
+        f.write(str(x))
+        f.close()
 
     else:
         sys.exit(0)
