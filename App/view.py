@@ -118,11 +118,22 @@ def req2(catalogo, annoInicial, annoFinal, sortFunction):
 def req3(catalogo, artista):
     instanceCatalogo = catalogo
     artistaInfo = next(elem for elem in instanceCatalogo["autores"]["elements"] if elem["DisplayName"] == artista)
-    obrasDelArtista = [elem for elem in instanceCatalogo["obras"]["elements"] if (int)(artistaInfo["ConstituentID"]) in ast.literal_eval(elem["ConstituentID"])]
+    obrasDelArtista = [elem for elem in instanceCatalogo["obras"]["elements"] if (int)(artistaInfo["ConstituentID"]) in ast.literal_eval(elem["ConstituentID"])] 
     tecnicas = [elem["Medium"] for elem in obrasDelArtista]
-    print(list(set(tecnicas)))
+    seen = set()
+    tecnicasUnicas = []
+    for item in tecnicas:
+        if item not in seen:
+            seen.add(item)
+            tecnicasUnicas.append(item)
+    tecnicasFrecuencia = {i : 0 for i in tecnicasUnicas}
+    for elem in obrasDelArtista:
+        tecnicasFrecuencia[elem["Medium"]] += 1
+    print(tecnicasFrecuencia)
+    tecnicasFrecuencia=  {k: v for k, v in sorted(tecnicasFrecuencia.items(), key=lambda item: item[1], reverse=True)}
+    print(tecnicasFrecuencia)
     resultado = obrasDelArtista
-    return resultado
+    return resultado, tecnicasFrecuencia
 
 catalog = None
 
@@ -196,7 +207,9 @@ while True:
         f.close()
 
     elif int(inputs[0]) == 7:
-        req3(catalog, "Louise Bourgeois")
+        obras, tecnicas = req3(catalog, "Louise Bourgeois")
+        
+        
 
     else:
         sys.exit(0)
