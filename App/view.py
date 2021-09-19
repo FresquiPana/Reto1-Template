@@ -107,7 +107,7 @@ def req2(catalogo, annoInicial, annoFinal, sortFunction):
             continue
         if (float)(dateNICE) < (float)(firstAnno):
             break
-        print(i["DateAcquired"], (float)(dateNICE), " > ",  (float)(firstAnno), (float)(dateNICE) < (float)(firstAnno))
+        print(i["DateAcquired"], (float)(dateNICE), " > ",  (float)(firstAnno), (float)(dateNICE) < (float)(firstAnno), i["CreditLine"])
         resultado.append(i)
     resultado.reverse()
     #for i in resultado:
@@ -127,7 +127,11 @@ while True:
         catalog = initCatalog()
         loadData(catalog)
         print('Archivos cargados')
-        print(catalog["autores"]["elements"][4], "\n\n\n", catalog["obras"]["elements"][0]["DateAcquired"])
+        print(catalog["autores"]["elements"][4], "\n\n\n", catalog["obras"]["elements"][0]["CreditLine"])
+        obrasCompradas = [elem for elem in catalog["obras"]["elements"] if elem["CreditLine"] == "Purchase"]
+        for i in obrasCompradas:
+            print(i["CreditLine"])
+        print(len(obrasCompradas), "\n\n\n")
         """
         catalog["autores"]["elements"].sort(key=lambda elem: (int)(elem["ConstituentID"]))
         catalog["obras"]["elements"].sort(key=lambda elem: (int)(elem["ObjectID"]))
@@ -177,6 +181,7 @@ while True:
                 artistasArray += [next((elem for elem in catalog["autores"]["elements"] if elem["ConstituentID"] == str(j)))["DisplayName"]]
             x.add_row(list(resultado[i].values())[:2] + [[dab for dab in artistasArray]] + list(resultado[i].values())[4:6] + [list(resultado[i].values())[3]] + list(resultado[i].values())[10:13])
         print("\n\nNumero de obras en el rango: \n", len(resultado)) #numero de obras en el rango entregado
+        print("\nnumero de obras compradas: \n", len([elem for elem in resultado if ("Purchase" in elem["CreditLine"]) or ("purchase" in elem["CreditLine"])]))
         f.write(str(x))
         f.close()
 
