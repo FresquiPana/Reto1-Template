@@ -50,6 +50,7 @@ def printMenu():
     print('4- Ultimos tres elementos (artistas & obras)')
     print("5- req1")
     print("6- req2")
+    print("7- req3")
 
 def initCatalog():
     """
@@ -112,6 +113,15 @@ def req2(catalogo, annoInicial, annoFinal, sortFunction):
     resultado.reverse()
     #for i in resultado:
     #    print(i["DateAcquired"], dateNICE)
+    return resultado
+
+def req3(catalogo, artista):
+    instanceCatalogo = catalogo
+    artistaInfo = next(elem for elem in instanceCatalogo["autores"]["elements"] if elem["DisplayName"] == artista)
+    obrasDelArtista = [elem for elem in instanceCatalogo["obras"]["elements"] if (int)(artistaInfo["ConstituentID"]) in ast.literal_eval(elem["ConstituentID"])]
+    tecnicas = [elem["Medium"] for elem in obrasDelArtista]
+    print(list(set(tecnicas)))
+    resultado = obrasDelArtista
     return resultado
 
 catalog = None
@@ -184,6 +194,9 @@ while True:
         print("\nnumero de obras compradas: \n", len([elem for elem in resultado if ("Purchase" in elem["CreditLine"]) or ("purchase" in elem["CreditLine"])]))
         f.write(str(x))
         f.close()
+
+    elif int(inputs[0]) == 7:
+        req3(catalog, "Louise Bourgeois")
 
     else:
         sys.exit(0)
