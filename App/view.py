@@ -65,12 +65,12 @@ def loadData(catalog):
 
 def req1(catalogo, annoInicial, annoFinal):
     instanceCatalogo = catalogo
-    instanceCatalogo["autores"]["elements"].sort(key=lambda elem: (int)(elem["BeginDate"]), reverse = True)
+    instanceCatalogo["autores"]["elements"].sort(key=lambda elem: (float)(elem["BeginDate"]), reverse = True)
     resultado = []
     for i in instanceCatalogo["autores"]["elements"]:
-        if (int)(i["BeginDate"])>(int)(annoFinal):
+        if (float)(i["BeginDate"])>(float)(annoFinal):
             continue
-        if (int)(i["BeginDate"]) < (int)(annoInicial):
+        if (float)(i["BeginDate"]) < (float)(annoInicial):
             break
         print(i["BeginDate"])
         resultado.append(i)
@@ -89,28 +89,29 @@ def req2(catalogo, annoInicial, annoFinal, sortFunction):
     def sortingFunc(anno1, anno2):
         anno1use = anno1["DateAcquired"].split("-") if anno1["DateAcquired"].split("-")!=[''] else ["0" for _ in range(3)] #[2020, 10, 02]
         anno2use = anno2["DateAcquired"].split("-") if anno2["DateAcquired"].split("-")!=[''] else ["0" for _ in range(3)]
-        firstAnno = (int)(anno1use[0]) + ((months[(int)(anno1use[1])-1] + (int)(anno1use[2]))/365) #2020.344 
-        secondAnno = (int)(anno2use[0]) + ((months[(int)(anno2use[1])-1] + (int)(anno2use[2]))/365)
-        if((int)(firstAnno)>(int)(secondAnno)):
+        firstAnno = (float)(anno1use[0]) + ((months[(int)(anno1use[1])-1] + (float)(anno1use[2]))/365) #2020.344 
+        secondAnno = (float)(anno2use[0]) + ((months[(int)(anno2use[1])-1] + (float)(anno2use[2]))/365)
+        if((float)(firstAnno)>(float)(secondAnno)):
             return 1
         return 0
     sortingAlgorigthms[(int)(sortFunction)](lst = instanceCatalogo["obras"], cmpfunction = sortingFunc) # ShSort.sort(lst = instanceCatalogo["obras"], cmpfunction = sortingFunc)
     annoInicialUse = annoInicial.split("-") if annoInicial.split("-")!=[''] else ["0" for _ in range(3)] #[1920, 02, 20]
-    firstAnno = (int)(annoInicialUse[0]) + ((months[(int)(annoInicialUse[1])-1] + (int)(annoInicialUse[2]))/365)#1920.216
+    firstAnno = (float)(annoInicialUse[0]) + ((months[(int)(annoInicialUse[1])-1] + (float)(annoInicialUse[2]))/365)#1920.216
     annoFinalUse = annoFinal.split("-") if annoFinal.split("-")!=[''] else ["0" for _ in range(3)] #[1985, 02, 20]
-    lastAnno = (int)(annoFinalUse[0]) + ((months[(int)(annoFinalUse[1])-1] + (int)(annoFinalUse[2]))/365)#1985.216
+    lastAnno = (float)(annoFinalUse[0]) + ((months[(int)(annoFinalUse[1])-1] + (float)(annoFinalUse[2]))/365)#1985.216
     resultado = []
     for i in instanceCatalogo["obras"]["elements"]:
         dateAcquiredUse = i["DateAcquired"].split("-") if i["DateAcquired"].split("-")!=[''] else ["0" for _ in range(3)]#[1920, 02, 20]
-        dateNICE = (int)(dateAcquiredUse[0]) + ((months[(int)(dateAcquiredUse[1])-1] + (int)(dateAcquiredUse[2]))/365)#1920.216
-        if (int)(dateNICE)>(int)(lastAnno):
+        dateNICE = (float)(dateAcquiredUse[0]) + ((months[(int)(dateAcquiredUse[1])-1] + (float)(dateAcquiredUse[2]))/365)#1920.216
+        if (float)(dateNICE)>(float)(lastAnno):
             continue
-        if (int)(dateNICE) < (int)(firstAnno):
+        if (float)(dateNICE) < (float)(firstAnno):
             break
+        print(i["DateAcquired"], (float)(dateNICE), " > ",  (float)(firstAnno), (float)(dateNICE) < (float)(firstAnno))
         resultado.append(i)
     resultado.reverse()
-    for i in resultado:
-        print(i["DateAcquired"])
+    #for i in resultado:
+    #    print(i["DateAcquired"], dateNICE)
     return resultado
 
 catalog = None
@@ -161,7 +162,7 @@ while True:
         
     elif int(inputs[0]) == 6:
         f= open(cf.data_dir + "/tableTry.txt","w+")
-        resultado = req2(catalog, "1920-02-20", "1985-02-20", "3")
+        resultado = req2(catalog, "1944-06-06", "1989-11-09", "1")
         x = PrettyTable()
         print([list(resultado[0].values())[3]])
         print(list(resultado[0].values())[:3] + list(resultado[0].values())[4:6] + [list(resultado[0].values())[3]] + list(resultado[0].values())[10:13]) #0(ObjectID),1(Title),2(ArtistsIDs),4(Medium),5(Dimensions),3(Date),10(DateAcquired),12(URL) [0,1,2,3,4,5,6,7,8,9,10,11,12]
