@@ -22,6 +22,7 @@
 
 import ast
 from prettytable import PrettyTable
+import prettytable
 import config as cf
 import sys
 import controller
@@ -208,7 +209,35 @@ while True:
 
     elif int(inputs[0]) == 7:
         obras, tecnicas = req3(catalog, "Louise Bourgeois")
-        
+        print(tecnicas)
+        x = PrettyTable()
+        x.field_names = ["MediumName", "Count"]
+        count = 0
+        for tech, uses in tecnicas.items(): # (nombre, 3) tech = nombre uses = 3
+            x.add_row([tech, uses])
+            count += 1
+            if count == 5:
+                break
+        print(x)
+        x = PrettyTable()
+        print("\n\nHis/Her most used technique is:", [*tecnicas][0], "with", list(tecnicas.values())[0], "pices")
+        oCTMU = [elem for elem in obras if elem["Medium"]==[*tecnicas][0]] #obrasConTecnicaMasUtilizada
+        print([elem["Medium"] for elem in oCTMU])#ObjectID, Medium, Date, Dimensions, DateAquired, Department, Classification, URL
+        listaUwU = ["ObjectID", "Medium", "Date", "Dimensions", "DateAcquired", "Department", "Classification", "URL"]
+        x.field_names = listaUwU
+        for i in oCTMU:
+            dab = []
+            for j in listaUwU:
+                print(j)
+                print( i[j], "\n\n")
+                dab += [i[j]]
+            x.add_row(dab)
+        f= open(cf.data_dir + "/tableTry.txt","w+")
+        f.write(str(x))
+        f.close()
+        print(x)
+
+
         
 
     else:
